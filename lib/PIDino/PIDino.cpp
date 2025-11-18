@@ -1,27 +1,32 @@
 #include "PIDino.hpp"
 #include <Arduino.h>
 
-PIDino::PIDino(const float setPoint, const float minValue, const float maxValue, const float Kp, const float Ki, const float Kd)
-       :setPoint_(setPoint),
-        Kp_(Kp), Ki_(Ki), Kd_(Kd),
-        minValue_(minValue), maxValue_(maxValue),
-        last_error_(0), integral_(0), derivative_(), lastTime_(0) {
+PIDino::PIDino(float setPoint, float minOutput, float maxOutput,
+               float Kp, float Ki, float Kd, float bias)
+    : setPoint_(setPoint), minOutput_(minOutput), maxOutput_(maxOutput),
+      Kp_(Kp), Ki_(Ki), Kd_(Kd), bias_(bias),
+      integral_(0), integralMax_(1000.0f),
+      lastError_(0), lastTime_(millis())
+{}
+
+float PIDino::compute(float input) {
+    unsigned long now = millis();
+    float dt = (now - lastTime_) / 1000.0f;
+    if (dt <= 0.0f) dt = 0.001f;  // prevent div by zero
+
+    float error = setPoint_ - input;
+
+    // Trapezoidal integral with anti-windup
+    integral_ += 0.5f * (error + lastError_) * dt;
+    integral_ = constrain(integral_, -integralMax_, integralMax_);
+
+    // Derivative
+    float derivative = (error - lastError_) / dt;
+
+    lastError_ = error;
+    lastTime_ = now;
+
+    return Kp_ * error + Ki_ * integral_ + Kd_ * derivative + bias_;
 }
 
-float PIDino::compute(const float input) {
-    const float dt = (millis() - lastTime_) / 1000.0;
-
-    const float e = setPoint_ - input;
-
-    integral_ += dt / 2 * (e + last_error_);
-    integral_ = constrain(integral_, minValue_, maxValue_);
-
-    derivative_ = (e - last_error_) / dt;
-
-    const float output = Kp_ * e + Ki_ * integral_ + Kd_ * derivative_;
-
-    lastTime_ = millis();
-    last_error_ = e;
-
-    return output;
-}
+void PIDino::setSetPoint(float sp) { setPoint_ = sp; }
