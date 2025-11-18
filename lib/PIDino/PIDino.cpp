@@ -1,10 +1,8 @@
 #include "PIDino.hpp"
 #include <Arduino.h>
 
-PIDino::PIDino(float setPoint, float minOutput, float maxOutput,
-               float Kp, float Ki, float Kd, float bias)
-    : setPoint_(setPoint), minOutput_(minOutput), maxOutput_(maxOutput),
-      Kp_(Kp), Ki_(Ki), Kd_(Kd), bias_(bias),
+PIDino::PIDino(float setPoint, float Kp, float Ki, float Kd, float bias)
+    : setPoint_(setPoint), Kp_(Kp), Ki_(Ki), Kd_(Kd), bias_(bias),
       integral_(0), integralMax_(1000.0f),
       lastError_(0), lastTime_(millis())
 {}
