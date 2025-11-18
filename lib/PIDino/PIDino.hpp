@@ -1,32 +1,27 @@
+// Welcome to my humble PIDino library. It ain't much, but it's honest work
+
 #ifndef PIDINO_HPP
 #define PIDINO_HPP
 
-// Welcome to my humble PIDino library. It ain't much, but it's honest work
-
 class PIDino {
 public:
-    PIDino(float setPoint, float minValue, float maxValue, float Kp, float Ki, float Kd);
+    // Constructor: setpoint, output limits, PID gains, optional bias
+    PIDino(float setPoint, float Kp, float Ki, float Kd, float bias = 0.0f);
 
+    // Compute PID output given current input
     float compute(float input);
 
-    void setpoint(float newSetpoint);
-    void Kp(float newKp);
-    void Ki(float newKi);
-    void Kd(float newKd);
+    void setSetPoint(float sp);       // change setpoint
 
 private:
-    float setPoint_;
-    float Kp_;
-    float Ki_;
-    float Kd_;
-    float minValue_;
-    float maxValue_;
-    float last_error_;
-    float integral_;
-    float derivative_;
-    unsigned long lastTime_;
+    float setPoint_;       // desired value
+    float Kp_, Ki_, Kd_;   // PID gains
+    float bias_;           // output bias (feedforward)
+
+    float integral_;       // integral accumulator
+    float integralMax_;    // integral anti-windup limit
+    float lastError_;      // last error for derivative
+    unsigned long lastTime_; // last time compute() was called
 };
 
-
-
-#endif //PIDINO_HPP
+#endif
