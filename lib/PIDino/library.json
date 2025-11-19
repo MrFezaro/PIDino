@@ -1,0 +1,12 @@
+{
+    "name": "PIDino",
+    "version": "1.0.0",
+    "description": "Simple PID controller",
+    "authors": "Fezaro",
+    "build": {
+        "srcFilter": [
+            "+<*.cpp>",
+            "+<*.hpp>"
+        ]
+    }
+}
