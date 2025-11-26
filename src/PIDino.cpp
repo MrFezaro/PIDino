@@ -28,3 +28,17 @@ float PIDino::compute(float input) {
 }
 
 void PIDino::setSetPoint(float sp) { setPoint_ = sp; }
+
+void PIDino::setKp(float Kp) { Kp_ = Kp; }
+
+void PIDino::setKi(float Ki) { Ki_ = Ki; }
+
+void PIDino::setKd(float Kd) { Kd_ = Kd; }
+
+void PIDino::setBias(float bias) { bias_ = bias; }
+
+void PIDino::setIntegralMax(float maxVal) {
+    integralMax_ = maxVal;
+    integral_ = constrain(integral_, -integralMax_, integralMax_);
+}
+

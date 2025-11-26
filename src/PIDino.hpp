@@ -5,19 +5,20 @@
 
 class PIDino {
 public:
-    // Constructor: setpoint, output limits, PID gains, optional bias
     PIDino(float setPoint, float Kp, float Ki, float Kd, float bias = 0.0f);
 
-    // Compute PID output given current input
     float compute(float input);
-
-    void setSetPoint(float sp);       // change setpoint
+    void setKp(float Kp);
+    void setKi(float Ki);
+    void setKd(float Kd);
+    void setBias(float bias);
+    void setIntegralMax(float maxVal);
+    void setSetPoint(float sp);
 
 private:
     float setPoint_;       // desired value
     float Kp_, Ki_, Kd_;   // PID gains
     float bias_;           // output bias (feedforward)
-
     float integral_;       // integral accumulator
     float integralMax_;    // integral anti-windup limit
     float lastError_;      // last error for derivative
